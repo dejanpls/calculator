@@ -33,3 +33,10 @@ function displayIntegers(e) {
     operand.push(e.target.textContent);
     display.textContent = operand.join("");
 }
+
+function getOperands() {
+    if (!operandA) operandA = operand.join("");
+    else if (operandA) operandB = operand.join("");
+
+    operand = [];
+}
