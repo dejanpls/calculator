@@ -27,3 +27,9 @@ let operator = [];
 
 // save integer until operator is pressed
 let operand = [];
+
+// functions
+function displayIntegers(e) {
+    operand.push(e.target.textContent);
+    display.textContent = operand.join("");
+}
