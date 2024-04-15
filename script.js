@@ -21,3 +21,9 @@ function divide (a, b) {
 	return parseInt(a) / parseInt(b);
 }
 
+let operandA;
+let operandB;
+let operator = [];
+
+// save integer until operator is pressed
+let operand = [];
