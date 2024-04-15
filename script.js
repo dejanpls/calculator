@@ -1,24 +1,30 @@
 const display = document.querySelector("div#input");
 const integerBtns = document.querySelectorAll("button.integer");
+const floatBtn = document.querySelector("button.float");
 const operationBtns = document.querySelectorAll("button.operator");
 
-integerBtns.forEach(btn => btn.addEventListener("mousedown", displayIntegers));
+integerBtns.forEach(btn => btn.addEventListener("mousedown", displayNumbers));
+floatBtn.addEventListener("mousedown", displayNumbers);
 operationBtns.forEach(btn => btn.addEventListener("mousedown", evaluate));
 
 function add (a, b) {
-	return parseInt(a) + parseInt(b);
+	if (a % 1 === 0 && b % 1 === 0) return parseInt(a) + parseInt(b);
+	else return parseFloat(parseFloat(a) + parseFloat(b)).toFixed(1);
 }
 
 function subtract (a, b) {
-	return parseInt(a) - parseInt(b);
+	if (a % 1 === 0 && b % 1 === 0) return parseInt(a) - parseInt(b);
+	else return parseFloat(parseFloat(a) - parseFloat(b)).toFixed(1);
 }
 
 function multiply (a, b) {
-	return parseInt(a) * parseInt(b);
+	if (a % 1 === 0 && b % 1 === 0) return parseInt(a) * parseInt(b);
+	else return parseFloat(parseFloat(a) * parseFloat(b)).toFixed(1);
 }
 
 function divide (a, b) {
-	return parseInt(a) / parseInt(b);
+	if (a % 1 === 0 && b % 1 === 0) return parseInt(a) / parseInt(b);
+	else return parseFloat(parseFloat(a) / parseFloat(b)).toFixed(1);
 }
 
 let operandA;
@@ -29,9 +35,12 @@ let operator = [];
 let operand = [];
 
 // functions
-function displayIntegers(e) {
-    operand.push(e.target.textContent);
-    display.textContent = operand.join("");
+function displayNumbers(e) {
+	if (operand.length < 9) {	
+		const number = e.target.textContent;
+	    operand.push(e.target.textContent);
+	    display.textContent = operand.join("");
+	}
 }
 
 function getOperands() {
@@ -58,10 +67,16 @@ function evaluate(e) {
     if (operandA) {
         const evaluator = getOperator(e.target.classList[2]);
         
-        if (operandB) display.textContent = operate(operandA, operandB, window[evaluator]);
+        if (operandB) {
+        	let result = operate(operandA, operandB, window[evaluator]);
+        	result = result.toString();
+        	if (result.length > 9) display.textContent = result.slice(0, 9);
+        	else display.textContent = result;
+        
+        	// save the evaluation to operandA and clear operandB;
+        	operandA = display.textContent;
+        	operandB = "";
+        }
 
-        // save the evaluation to operandA and clear operandB;
-        operandA = display.textContent;
-        operandB = "";
     }
 }
