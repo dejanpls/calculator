@@ -1,23 +1,23 @@
-const add = function(a, b) {
-	return a + b;
-};
+const display = document.querySelector("div#input");
+const integerBtns = document.querySelectorAll("button.integer");
+const operationBtns = document.querySelectorAll("button.operator");
 
-const subtract = function(a, b) {
-	return a - b;
-};
+integerBtns.forEach(btn => btn.addEventListener("mousedown", displayIntegers));
+operationBtns.forEach(btn => btn.addEventListener("mousedown", evaluate));
 
-const multiply = function(a, b) {
-	return a * b;
-};
+function add (a, b) {
+	return parseInt(a) + parseInt(b);
+}
 
-const divide = function(a, b) {
-	return a / b;
-};
+function subtract (a, b) {
+	return parseInt(a) - parseInt(b);
+}
 
-let operandA;
-let operandB;
-let operator;
+function multiply (a, b) {
+	return parseInt(a) * parseInt(b);
+}
 
-const operate = function (operandA, operandB, operator) {
-	return operator(operandA, operandB);
-};
+function divide (a, b) {
+	return parseInt(a) / parseInt(b);
+}
+
