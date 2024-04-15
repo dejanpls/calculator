@@ -40,3 +40,28 @@ function getOperands() {
 
     operand = [];
 }
+
+function getOperator(op) {
+    operator.unshift(op);
+    return operator[1];
+}
+
+function operate (operandA, operandB, operator) {
+    return operator(operandA, operandB);
+}
+
+// main function
+function evaluate(e) {
+
+    getOperands();
+
+    if (operandA) {
+        const evaluator = getOperator(e.target.classList[2]);
+        
+        if (operandB) display.textContent = operate(operandA, operandB, window[evaluator]);
+
+        // save the evaluation to operandA and clear operandB;
+        operandA = display.textContent;
+        operandB = "";
+    }
+}
