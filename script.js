@@ -2,81 +2,94 @@ const display = document.querySelector("div#input");
 const integerBtns = document.querySelectorAll("button.integer");
 const floatBtn = document.querySelector("button.float");
 const operationBtns = document.querySelectorAll("button.operator");
+const evaluateBtn = document.querySelector("button.equalize");
+const clearBtn = document.querySelector("button.clear-all");
 
-integerBtns.forEach(btn => btn.addEventListener("mousedown", displayNumbers));
-floatBtn.addEventListener("mousedown", displayNumbers);
+integerBtns.forEach(btn => btn.addEventListener("mousedown", getOperands));
+operationBtns.forEach(btn => btn.addEventListener("mousedown", getOperator));
 operationBtns.forEach(btn => btn.addEventListener("mousedown", evaluate));
+evaluateBtn.addEventListener("mousedown", evaluate);
+clearBtn.addEventListener("mousedown", clearAll)
 
 function add (a, b) {
-	if (a % 1 === 0 && b % 1 === 0) return parseInt(a) + parseInt(b);
-	else return parseFloat(parseFloat(a) + parseFloat(b)).toFixed(1);
+    if (a % 1 === 0 && b % 1 === 0) return parseInt(a) + parseInt(b);
+    if (a % 1 !== 0 || b % 1 !== 0) {
+        const result = parseFloat(a) + parseFloat(b);
+        return (result % 1 === 0) ? parseInt(result) : parseFloat(result);
+    } else return result;
 }
 
 function subtract (a, b) {
-	if (a % 1 === 0 && b % 1 === 0) return parseInt(a) - parseInt(b);
-	else return parseFloat(parseFloat(a) - parseFloat(b)).toFixed(1);
+    if (a % 1 === 0 && b % 1 === 0) return parseInt(a) - parseInt(b);
+    if (a % 1 !== 0 || b % 1 !== 0) {
+        const result = parseFloat(a) - parseFloat(b);
+        return (result % 1 === 0) ? parseInt(result) : parseFloat(result);
+    } else return result;
 }
 
 function multiply (a, b) {
-	if (a % 1 === 0 && b % 1 === 0) return parseInt(a) * parseInt(b);
-	else return parseFloat(parseFloat(a) * parseFloat(b)).toFixed(1);
+    if (a % 1 === 0 && b % 1 === 0) return parseInt(a) * parseInt(b);
+    if (a % 1 !== 0 || b % 1 !== 0) {
+        const result = parseFloat(a) * parseFloat(b);
+        return (result % 1 === 0) ? parseInt(result) : parseFloat(result);
+    } else return result;
 }
 
 function divide (a, b) {
-	if (a % 1 === 0 && b % 1 === 0) return parseInt(a) / parseInt(b);
-	else return parseFloat(parseFloat(a) / parseFloat(b)).toFixed(1);
+    if (a % 1 === 0 && b % 1 === 0) return parseInt(a) / parseInt(b);
+    if (a % 1 !== 0 || b % 1 !== 0) {
+        const result = parseFloat(a) / parseFloat(b);
+        return (result % 1 === 0) ? parseInt(result) : parseFloat(result);
+    } else return result;
 }
 
-let operandA;
-let operandB;
-let operator = [];
+let operandA = "";
+let operandB = "";
+let operator;
 
-// save integer until operator is pressed
-let operand = [];
-
-// functions
-function displayNumbers(e) {
-	if (operand.length < 9) {	
-		const number = e.target.textContent;
-	    operand.push(e.target.textContent);
-	    display.textContent = operand.join("");
-	}
+function displayNumbers() {
+   	if (!operandB) display.textContent = operandA
+   	else display.textContent = operandB;
 }
 
-function getOperands() {
-    if (!operandA) operandA = operand.join("");
-    else if (operandA) operandB = operand.join("");
+function getOperands(e) {
 
-    operand = [];
+    if (!(display.textContent.includes(".") && e.target.textContent == ".")) {
+
+    	if (!operator && operandA.length < 9) operandA += e.target.textContent;       	
+      	if (operator && operandB.length < 9) operandB += e.target.textContent;     	
+    }
+    
+    displayNumbers();
+}   
+
+function getOperator(e) {
+    if (!operandB) if (e.target.classList[2] !== "equalize") operator = e.target.classList[2];
 }
 
-function getOperator(op) {
-    operator.unshift(op);
-    return operator[1];
+function evaluate(e) {
+    if (operandA && operandB) {
+        let result = operate (operandA, operandB, window[operator]);
+        // display up to nine decimals
+        display.textContent = result.toString().slice(0, 9);
+
+        saveResult(e);
+    }
 }
 
 function operate (operandA, operandB, operator) {
     return operator(operandA, operandB);
 }
 
-// main function
-function evaluate(e) {
+function saveResult(e) {
+    operandA = display.textContent;
+    operandB = "";
+    operator = e.target.classList[2];
+}
 
-    getOperands();
-
-    if (operandA) {
-        const evaluator = getOperator(e.target.classList[2]);
-        
-        if (operandB) {
-        	let result = operate(operandA, operandB, window[evaluator]);
-        	result = result.toString();
-        	if (result.length > 9) display.textContent = result.slice(0, 9);
-        	else display.textContent = result;
-        
-        	// save the evaluation to operandA and clear operandB;
-        	operandA = display.textContent;
-        	operandB = "";
-        }
-
-    }
+function clearAll() {
+    operandA = "";
+    operandB = "";
+    operator = undefined;
+    display.textContent = "0";
 }
