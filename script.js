@@ -4,12 +4,14 @@ const floatBtn = document.querySelector("button.float");
 const operationBtns = document.querySelectorAll("button.operator");
 const evaluateBtn = document.querySelector("button.equalize");
 const clearBtn = document.querySelector("button.clear-all");
+const absoluteBtn = document.querySelector("button.absolute");
 
 integerBtns.forEach(btn => btn.addEventListener("mousedown", getOperands));
 operationBtns.forEach(btn => btn.addEventListener("mousedown", getOperator));
 operationBtns.forEach(btn => btn.addEventListener("mousedown", evaluate));
 evaluateBtn.addEventListener("mousedown", evaluate);
-clearBtn.addEventListener("mousedown", clearAll)
+clearBtn.addEventListener("mousedown", clearAll);
+absoluteBtn.addEventListener("mousedown", getAbsolute);
 
 function add (a, b) {
     if (a % 1 === 0 && b % 1 === 0) return parseInt(a) + parseInt(b);
@@ -92,4 +94,11 @@ function clearAll() {
     operandB = "";
     operator = undefined;
     display.textContent = "0";
+}
+
+function getAbsolute() {
+	if (display.textContent < 0) display.textContent = Math.abs(display.textContent)
+	else display.textContent = -Math.abs(display.textContent);
+	operandA = display.textContent;
+    operandB = "";
 }
