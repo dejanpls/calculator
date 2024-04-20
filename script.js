@@ -5,6 +5,7 @@ const operationBtns = document.querySelectorAll("button.operator");
 const evaluateBtn = document.querySelector("button.equalize");
 const clearBtn = document.querySelector("button.clear-all");
 const absoluteBtn = document.querySelector("button.absolute");
+const percentageBtn = document.querySelector("button.percentage");
 
 integerBtns.forEach(btn => btn.addEventListener("mousedown", getOperands));
 operationBtns.forEach(btn => btn.addEventListener("mousedown", getOperator));
@@ -12,37 +13,22 @@ operationBtns.forEach(btn => btn.addEventListener("mousedown", evaluate));
 evaluateBtn.addEventListener("mousedown", evaluate);
 clearBtn.addEventListener("mousedown", clearAll);
 absoluteBtn.addEventListener("mousedown", getAbsolute);
+percentageBtn.addEventListener("mousedown", getPercentage);
 
 function add (a, b) {
-    if (a % 1 === 0 && b % 1 === 0) return parseInt(a) + parseInt(b);
-    if (a % 1 !== 0 || b % 1 !== 0) {
-        const result = parseFloat(a) + parseFloat(b);
-        return (result % 1 === 0) ? parseInt(result) : parseFloat(result);
-    } else return result;
+    return parseFloat(a) + parseFloat(b);
 }
 
 function subtract (a, b) {
-    if (a % 1 === 0 && b % 1 === 0) return parseInt(a) - parseInt(b);
-    if (a % 1 !== 0 || b % 1 !== 0) {
-        const result = parseFloat(a) - parseFloat(b);
-        return (result % 1 === 0) ? parseInt(result) : parseFloat(result);
-    } else return result;
+    return parseFloat(a) - parseFloat(b);
 }
 
 function multiply (a, b) {
-    if (a % 1 === 0 && b % 1 === 0) return parseInt(a) * parseInt(b);
-    if (a % 1 !== 0 || b % 1 !== 0) {
-        const result = parseFloat(a) * parseFloat(b);
-        return (result % 1 === 0) ? parseInt(result) : parseFloat(result);
-    } else return result;
+    return parseFloat(a) * parseFloat(b);
 }
 
 function divide (a, b) {
-    if (a % 1 === 0 && b % 1 === 0) return parseInt(a) / parseInt(b);
-    if (a % 1 !== 0 || b % 1 !== 0) {
-        const result = parseFloat(a) / parseFloat(b);
-        return (result % 1 === 0) ? parseInt(result) : parseFloat(result);
-    } else return result;
+    return parseFloat(a) / parseFloat(b);
 }
 
 let operandA = "";
@@ -101,4 +87,11 @@ function getAbsolute() {
 	else display.textContent = -Math.abs(display.textContent);
 	operandA = display.textContent;
     operandB = "";
+}
+
+function getPercentage() {
+	if (!operandB) display.textContent = parseFloat(display.textContent) * 0.01;
+	else display.textContent = parseFloat(operandA) * parseFloat(operandB) * 0.01;
+	operandA = display.textContent;
+	operandB = "";
 }
