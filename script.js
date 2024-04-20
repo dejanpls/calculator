@@ -43,7 +43,6 @@ function displayNumbers() {
 }
 
 function getOperands(e) {
-
     if (!(display.textContent.includes(".") && e.target.textContent == ".")) {
 
     	if (!operator && operandA.length < 9) operandA += e.target.textContent;       	
@@ -87,6 +86,7 @@ function clearAll() {
 function getAbsolute() {
 	if (display.textContent < 0) display.textContent = Math.abs(display.textContent)
 	else display.textContent = -Math.abs(display.textContent);
+
 	operandA = display.textContent;
     operandB = "";
 }
@@ -94,6 +94,7 @@ function getAbsolute() {
 function getPercentage() {
 	if (!operandB) display.textContent = parseFloat(display.textContent) * 0.01;
 	else display.textContent = parseFloat(operandA) * parseFloat(operandB) * 0.01;
+
 	operandA = display.textContent;
 	operandB = "";
 }
