@@ -6,6 +6,7 @@ const evaluateBtn = document.querySelector("button.equalize");
 const clearBtn = document.querySelector("button.clear-all");
 const absoluteBtn = document.querySelector("button.absolute");
 const percentageBtn = document.querySelector("button.percentage");
+const undoBtn = document.querySelector("button.undo");
 
 integerBtns.forEach(btn => btn.addEventListener("mousedown", getOperands));
 operationBtns.forEach(btn => btn.addEventListener("mousedown", getOperator));
@@ -14,6 +15,7 @@ evaluateBtn.addEventListener("mousedown", evaluate);
 clearBtn.addEventListener("mousedown", clearAll);
 absoluteBtn.addEventListener("mousedown", getAbsolute);
 percentageBtn.addEventListener("mousedown", getPercentage);
+undoBtn.addEventListener("mousedown", undoLastNumber);
 
 function add (a, b) {
     return parseFloat(a) + parseFloat(b);
@@ -94,4 +96,15 @@ function getPercentage() {
 	else display.textContent = parseFloat(operandA) * parseFloat(operandB) * 0.01;
 	operandA = display.textContent;
 	operandB = "";
+}
+
+function undoLastNumber() {
+	if (!operandB && display.textContent.length > 1) {
+		operandA = operandA.slice(0, operandA.length - 1);
+		display.textContent = operandA;
+	}
+	if (operandB && display.textContent.length > 1) {
+		operandB = operandB.slice(0, operandB.length - 1);
+		display.textContent = operandB;
+	}
 }
