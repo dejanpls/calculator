@@ -16,6 +16,8 @@ clearBtn.addEventListener("mousedown", clearAll);
 absoluteBtn.addEventListener("mousedown", getAbsolute);
 percentageBtn.addEventListener("mousedown", getPercentage);
 undoBtn.addEventListener("mousedown", undoLastNumber);
+document.addEventListener("keydown", getKeyboardInput);
+
 
 function add (a, b) {
     return parseFloat(a) + parseFloat(b);
@@ -36,21 +38,43 @@ function divide (a, b) {
 let operandA = "";
 let operandB = "";
 let operator;
+let key = "2";
 
 function displayNumbers() {
    	if (!operandB) display.textContent = operandA
    	else display.textContent = operandB;
 }
 
+// Here should be a e.key handle
 function getOperands(e) {
+	
+
     if (!(display.textContent.includes(".") && e.target.textContent == ".")) {
 
-    	if (!operator && operandA.length < 9) operandA += e.target.textContent;       	
-      	if (operator && operandB.length < 9) operandB += e.target.textContent;     	
+      	if (operator === "equalize") {
+      		operandA = e.target.textContent;
+    		operandB = "";
+    		operator = undefined;
+      	} 
+    	else if (!operator && operandA.length < 9) operandA += e.target.textContent;       	
+      	else if (operator && operandB.length < 9) operandB += e.target.textContent;     	
+     
     }
-    
+
     displayNumbers();
 }   
+
+function getKeyboardInput (e) {
+	const key = document.querySelector(`button.integer[key="${e.key}"]`)
+	if (!key) return;
+	key.textContent;
+
+	if (!operator && operandA.length < 9) operandA += key.textContent;       	
+    else if (operator && operandB.length < 9) operandB += key.textContent; 
+
+    displayNumbers();
+
+}
 
 function getOperator(e) {
     if (!operandB) if (e.target.classList[2] !== "equalize") operator = e.target.classList[2];
@@ -60,9 +84,12 @@ function evaluate(e) {
     if (operandA && operandB) {
         let result = operate (operandA, operandB, window[operator]);
         // display up to nine decimals
-        display.textContent = result.toString().slice(0, 9);
+        if (result === Infinity) clearAll();
+		else {
+			display.textContent = result.toString().slice(0, 9);
+        	saveResult(e);
+		}    
 
-        saveResult(e);
     }
 }
 
@@ -100,12 +127,14 @@ function getPercentage() {
 }
 
 function undoLastNumber() {
-	if (!operandB && display.textContent.length > 1) {
+	if (!operandB) {
 		operandA = operandA.slice(0, operandA.length - 1);
-		display.textContent = operandA;
+		if (operandA.length === 0) display.textContent = "0";
+		else display.textContent = operandA;
 	}
-	if (operandB && display.textContent.length > 1) {
+	if (operandB) {
 		operandB = operandB.slice(0, operandB.length - 1);
-		display.textContent = operandB;
+		if (operandB.length === 0) display.textContent = "0";
+		else display.textContent = operandB;
 	}
 }
