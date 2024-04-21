@@ -11,12 +11,15 @@ const undoBtn = document.querySelector("button.undo");
 integerBtns.forEach(btn => btn.addEventListener("mousedown", getOperands));
 operationBtns.forEach(btn => btn.addEventListener("mousedown", getOperator));
 operationBtns.forEach(btn => btn.addEventListener("mousedown", evaluate));
+
 evaluateBtn.addEventListener("mousedown", evaluate);
 clearBtn.addEventListener("mousedown", clearAll);
 absoluteBtn.addEventListener("mousedown", getAbsolute);
 percentageBtn.addEventListener("mousedown", getPercentage);
 undoBtn.addEventListener("mousedown", undoLastNumber);
-document.addEventListener("keydown", getKeyboardInput);
+
+document.addEventListener("keydown", getKeyboardInt);
+document.addEventListener("keydown", getKeyboardOperator);
 
 
 function add (a, b) {
@@ -38,14 +41,14 @@ function divide (a, b) {
 let operandA = "";
 let operandB = "";
 let operator;
-let key = "2";
 
 function displayNumbers() {
    	if (!operandB) display.textContent = operandA
    	else display.textContent = operandB;
 }
 
-// Here should be a e.key handle
+console.log("getOperands() and getKeyboardInt() are very alike");
+
 function getOperands(e) {
 	
 
@@ -64,15 +67,32 @@ function getOperands(e) {
     displayNumbers();
 }   
 
-function getKeyboardInput (e) {
+function getKeyboardInt(e) {
 	const key = document.querySelector(`button.integer[key="${e.key}"]`)
 	if (!key) return;
-	key.textContent;
 
-	if (!operator && operandA.length < 9) operandA += key.textContent;       	
-    else if (operator && operandB.length < 9) operandB += key.textContent; 
+    if (!(display.textContent.includes(".") && key.textContent == ".")) {
+
+    	if (operator === "equalize") {
+      		operandA = key.textContent;
+    		operandB = "";
+    		operator = undefined;
+      	} 
+    	else if (!operator && operandA.length < 9) operandA += key.textContent;       	
+      	else if (operator && operandB.length < 9) operandB += key.textContent;     	
+     
+    }
 
     displayNumbers();
+
+}
+
+function getKeyboardOperator(e) {
+	const key = document.querySelector(`button.operator[key="${e.key}"]`)
+
+	if (!key) return
+	if (!operandB) if (key.classList[2] !== "equalize") operator = key.classList[2];
+	if (key.classList[2] === "equalize") evaluate(e);
 
 }
 
@@ -100,7 +120,8 @@ function operate (operandA, operandB, operator) {
 function saveResult(e) {
     operandA = display.textContent;
     operandB = "";
-    operator = e.target.classList[2];
+    if (e.target.classList) operator = e.target.classList[2];
+    else operator = e.key.classList[2];
 }
 
 function clearAll() {
