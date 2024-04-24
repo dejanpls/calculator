@@ -1,6 +1,5 @@
 const display = document.querySelector("div#input");
 const integerBtns = document.querySelectorAll("button.integer");
-const floatBtn = document.querySelector("button.float");
 const operationBtns = document.querySelectorAll("button.operator");
 const evaluateBtn = document.querySelector("button.equalize");
 const clearBtn = document.querySelector("button.clear-all");
@@ -18,9 +17,10 @@ absoluteBtn.addEventListener("mousedown", getAbsolute);
 percentageBtn.addEventListener("mousedown", getPercentage);
 undoBtn.addEventListener("mousedown", undoLastNumber);
 
-document.addEventListener("keydown", getKeyboardInt);
-document.addEventListener("keydown", getKeyboardOperator);
-
+document.addEventListener("keydown", getKeyOperand);
+document.addEventListener("keydown", undoKey);
+document.addEventListener("keydown", getKeyOperator);
+document.addEventListener("keydown", evaluateKey);
 
 function add (a, b) {
     return parseFloat(a) + parseFloat(b);
@@ -38,62 +38,36 @@ function divide (a, b) {
     return parseFloat(a) / parseFloat(b);
 }
 
+function operate (operandA, operandB, operator) {
+    return operator(operandA, operandB);
+}
+
 let operandA = "";
 let operandB = "";
 let operator;
 
-function displayNumbers() {
-   	if (!operandB) display.textContent = operandA
-   	else display.textContent = operandB;
-}
-
-console.log("getOperands() and getKeyboardInt() are very alike");
-
 function getOperands(e) {
-	
-
-    if (!(display.textContent.includes(".") && e.target.textContent == ".")) {
-
-      	if (operator === "equalize") {
-      		operandA = e.target.textContent;
-    		operandB = "";
-    		operator = undefined;
-      	} 
-    	else if (!operator && operandA.length < 9) operandA += e.target.textContent;       	
-      	else if (operator && operandB.length < 9) operandB += e.target.textContent;     	
-     
-    }
-
-    displayNumbers();
+	addValue(e.target);
 }   
 
-function getKeyboardInt(e) {
-	const key = document.querySelector(`button.integer[key="${e.key}"]`)
-	if (!key) return;
+function addValue(value) {
 
-    if (!(display.textContent.includes(".") && key.textContent == ".")) {
-
+	if (!(display.textContent.includes(".") && value.textContent == ".")) {
     	if (operator === "equalize") {
-      		operandA = key.textContent;
+      		operandA = value.textContent;
     		operandB = "";
     		operator = undefined;
       	} 
-    	else if (!operator && operandA.length < 9) operandA += key.textContent;       	
-      	else if (operator && operandB.length < 9) operandB += key.textContent;     	
-     
+    	else if (!operator && operandA.length < 9) operandA += value.textContent;       	
+      	else if (operator && operandB.length < 9) operandB += value.textContent;     	
     }
 
     displayNumbers();
-
 }
 
-function getKeyboardOperator(e) {
-	const key = document.querySelector(`button.operator[key="${e.key}"]`)
-
-	if (!key) return
-	if (!operandB) if (key.classList[2] !== "equalize") operator = key.classList[2];
-	if (key.classList[2] === "equalize") evaluate(e);
-
+function displayNumbers() {
+   	if (!operandB) display.textContent = operandA;
+   	else display.textContent = operandB;
 }
 
 function getOperator(e) {
@@ -103,25 +77,23 @@ function getOperator(e) {
 function evaluate(e) {
     if (operandA && operandB) {
         let result = operate (operandA, operandB, window[operator]);
-        // display up to nine decimals
-        if (result === Infinity) clearAll();
+
+        if (result === Infinity) {
+        	clearAll();
+        	display.textContent = "NO WAY JOSE";
+        }
 		else {
 			display.textContent = result.toString().slice(0, 9);
         	saveResult(e);
 		}    
-
     }
-}
-
-function operate (operandA, operandB, operator) {
-    return operator(operandA, operandB);
 }
 
 function saveResult(e) {
     operandA = display.textContent;
     operandB = "";
-    if (e.target.classList) operator = e.target.classList[2];
-    else operator = e.key.classList[2];
+    if (e.target) operator = e.target.classList[2];
+    else operator = e.classList[2];
 }
 
 function clearAll() {
@@ -158,4 +130,29 @@ function undoLastNumber() {
 		if (operandB.length === 0) display.textContent = "0";
 		else display.textContent = operandB;
 	}
+}
+
+// Keyboard Functions
+function getKeyOperand(e) {
+	const key = document.querySelector(`button.integer[key="${e.key}"]`)
+	if (!key) return;
+	addValue(key);
+}
+
+function undoKey(e) {
+	const key = document.querySelector(`button.undo[key="${e.key}"]`)
+	if (!key) return;
+	undoLastNumber();
+}
+
+function getKeyOperator(e) {
+	const key = document.querySelector(`button.operator[key="${e.key}"]`)
+	if (!key) return;
+	if (!operandB) if (key.classList[2] !== "equalize") operator = key.classList[2];
+}
+
+function evaluateKey(e) {
+	const key = document.querySelector(`button.operator[key="${e.key}"]`)
+	if (!key) return;
+	evaluate(key);
 }
