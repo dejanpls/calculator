@@ -12,4 +12,6 @@ This fundamentals final project is going to combine everything I’ve learned so
 
 
 **Note** 
-*I've spent a lot of time solving this, probably more than many some would need to build a space rocket, but i've done my best.*
+*I've spent a lot of time solving this, but i've done my best.*
+*There's still a lot of space for improvements.*
+*I haven't been able to figure out a way to combine key and mouse events.*

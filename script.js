@@ -55,6 +55,18 @@ function selectEvaluator(e) {
 	} else removeSelected();
 }
 
+function selectKeyEvaluator(e) {
+	const key = document.querySelector(`button.operator[key="${e.key}"]`)
+	if (!key) return;
+	if (operandA && !operandB && key.classList[2] !== "equalize") {
+		removeSelected();
+		key.style.background = "#54898C";
+
+	} else {
+		removeSelected();
+	}
+}
+
 function removeSelected() {
 	operationBtns.forEach(btn => {
 		if (btn.classList[2] !== "equalize") btn.style.background = "#66A0A3";
@@ -166,16 +178,4 @@ function undoKey(e) {
 	const key = document.querySelector(`button.undo[key="${e.key}"]`)
 	if (!key) return;
 	undoLastNumber();
-}
-
-function selectKeyEvaluator(e) {
-	const key = document.querySelector(`button.operator[key="${e.key}"]`)
-	if (!key) return;
-	if (operandA && !operandB && key.classList[2] !== "equalize") {
-		removeSelected();
-		key.style.background = "#54898C";
-
-	} else {
-		removeSelected();
-	}
 }
