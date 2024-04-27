@@ -10,6 +10,7 @@ const undoBtn = document.querySelector("button.undo");
 integerBtns.forEach(btn => btn.addEventListener("mousedown", getOperands));
 operationBtns.forEach(btn => btn.addEventListener("mousedown", getOperator));
 operationBtns.forEach(btn => btn.addEventListener("mousedown", evaluate));
+operationBtns.forEach(btn => btn.addEventListener("mousedown", selectEvaluator));
 
 evaluateBtn.addEventListener("mousedown", evaluate);
 clearBtn.addEventListener("mousedown", clearAll);
@@ -21,6 +22,7 @@ document.addEventListener("keydown", getOperands);
 document.addEventListener("keydown", undoKey);
 document.addEventListener("keydown", getKeyOperator);
 document.addEventListener("keydown", evaluateKey);
+document.addEventListener("keydown", selectKeyEvaluator);
 
 function add (a, b) {
     return parseFloat(a) + parseFloat(b);
@@ -46,6 +48,19 @@ let operandA = "";
 let operandB = "";
 let operator;
 
+function selectEvaluator(e) {
+	if (operandA && !operandB && e.target.classList[2] !== "equalize") {
+		removeSelected();
+		e.target.style.background = "#54898C";
+	} else removeSelected();
+}
+
+function removeSelected() {
+	operationBtns.forEach(btn => {
+		if (btn.classList[2] !== "equalize") btn.style.background = "#66A0A3";
+	});
+}
+
 function getOperands(e) {
 	if (e.key) {
 		const key = document.querySelector(`button.integer[key="${e.key}"]`)
@@ -63,7 +78,7 @@ function addToOperand(value) {
     		operator = undefined;
       	} 
     	else if (!operator && operandA.length < 9) operandA += value.textContent;       	
-      	else if (operator && operandB.length < 9) operandB += value.textContent;     	
+      	else if (operator && operandB.length < 9) operandB += value.textContent;  	
     }
 
     displayNumbers();
@@ -75,13 +90,13 @@ function displayNumbers() {
 }
 
 function getOperator(e) {
-    if (!operandB) if (e.target.classList[2] !== "equalize") operator = e.target.classList[2];
+    if (operandA && !operandB) if (e.target.classList[2] !== "equalize") operator = e.target.classList[2];
 }
 
 function getKeyOperator(e) {
-	const key = document.querySelector(`button.operator[key="${e.key}"]`)
+	const key = document.querySelector(`button.operator[key="${e.key}"]`);
 	if (!key) return;
-	if (!operandB) if (key.classList[2] !== "equalize") operator = key.classList[2];
+	if (operandA && !operandB) if (key.classList[2] !== "equalize") operator = key.classList[2];
 }
 
 function evaluate(e) {
@@ -89,7 +104,7 @@ function evaluate(e) {
         let result = operate (operandA, operandB, window[operator]);
         if (result === Infinity) {
         	clearAll();
-        	display.textContent = "NO WAY JOSE";
+        	display.textContent = "lol";
         }
 		else {
 			display.textContent = result.toString().slice(0, 9);
@@ -151,4 +166,16 @@ function undoKey(e) {
 	const key = document.querySelector(`button.undo[key="${e.key}"]`)
 	if (!key) return;
 	undoLastNumber();
+}
+
+function selectKeyEvaluator(e) {
+	const key = document.querySelector(`button.operator[key="${e.key}"]`)
+	if (!key) return;
+	if (operandA && !operandB && key.classList[2] !== "equalize") {
+		removeSelected();
+		key.style.background = "#54898C";
+
+	} else {
+		removeSelected();
+	}
 }
