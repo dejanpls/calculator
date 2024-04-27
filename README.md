@@ -4,10 +4,10 @@
 
 ### Details
 
-This fundamentals final project is going to combine everything I’ve learned so far: 
+This <a href="https://dejanpls.github.io/calculator/">fundamentals final project</a> is going to combine everything I’ve learned so far: 
 
 * Make an on-screen calculator using JavaScript, HTML, and CSS.
-* Enable keyboard as well as button click `input`.
+* Enable keyboard as well as button click input into display area (`input`).
 * Division by zero shows a funny error message.
 
 
