@@ -14,4 +14,5 @@ This <a href="https://dejanpls.github.io/calculator/">fundamentals final project
 **Note** 
 *I've spent a lot of time solving this, but i've done my best.*
 *There's still a lot of space for improvements.*
-*I haven't been able to figure out a way to combine key and mouse events.*
+*I haven't been able to figure out a way to combine key and mouse events*
+*into single functions.*
